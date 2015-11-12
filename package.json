@@ -1,0 +1,19 @@
+{
+  "name": "@weo-edu/redux-map",
+  "description": "Simple map middleware.",
+  "repository": "git://github.com/weo-edu/redux-map.git",
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "scripts": {
+    "prepublish": "make build",
+    "postpublish": "make clean"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.0.15",
+    "babel-preset-es2015": "^6.1.2",
+    "standard": "^5.1.0",
+    "tape": "^4.2.0"
+  }
+}
