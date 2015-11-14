@@ -1,10 +1,14 @@
+/**
+ * Import
+ */
+
 import toPromise from 'to-promise'
 
 /**
  * Exports
  */
 
-export default function genMiddleware(errorHandler=defaultErrorHandler, successHandler=identity) {
+export default function mapMiddleware(errorHandler=defaultErrorHandler, successHandler=identity) {
   return ({dispatch}) => next => action =>
     action && typeof action.map === 'function'
       ? toPromise(action.map(dispatch)).then(successHandler, errorHandler)
