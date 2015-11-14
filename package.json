@@ -1,5 +1,5 @@
 {
-  "name": "@weo-edu/redux-map",
+  "name": "redux-map",
   "description": "Simple map middleware.",
   "repository": "git://github.com/weo-edu/redux-map.git",
   "version": "0.1.0",
