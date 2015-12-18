@@ -3,7 +3,7 @@
  */
 
 import test from 'tape'
-import flow from '../src'
+import {flo, flow} from '../src'
 import {stderr} from 'test-console'
 import isFunction from '@f/is-function'
 import compose from '@f/compose-middleware'
@@ -11,6 +11,8 @@ import compose from '@f/compose-middleware'
 /**
  * Tests
  */
+
+console.log('flow', flo, flow)
 
 var log = []
 const doDispatch = (v) => {
@@ -194,11 +196,3 @@ test('should dispatch nested flos', wrapEach(t => {
     t.end()
   }))
 }))
-
-
-function flo (obj) {
-  return {
-    type: 'flo',
-    payload: obj
-  }
-}

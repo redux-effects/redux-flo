@@ -17,7 +17,7 @@ const FLO = 'FLO'
 
 function flow(errorHandler=defaultErrorHandler, successHandler=identity) {
   return ({dispatch}) => next => action =>
-    action.type === FLO
+    action && action.type === FLO
       ? toPromise(map(dispatch, action.payload)).then(successHandler, errorHandler)
       : next(action)
 }
@@ -51,5 +51,6 @@ function flo (obj) {
 
 export default flow
 export {
-  flo
+  flo,
+  flow
 }
