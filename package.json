@@ -1,7 +1,7 @@
 {
-  "name": "redux-map",
-  "description": "Simple map middleware.",
-  "repository": "git://github.com/weo-edu/redux-map.git",
+  "name": "redux-flo",
+  "description": "Flow control middleware.",
+  "repository": "git://github.com/weo-edu/redux-flo.git",
   "version": "0.1.0",
   "license": "MIT",
   "main": "lib/index.js",
@@ -9,11 +9,18 @@
     "prepublish": "make build",
     "postpublish": "make clean"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@f/identity": "^1.1.1",
+    "@f/map": "^1.4.0",
+    "@f/to-promise": "^1.0.0"
+  },
   "devDependencies": {
+    "@f/compose-middleware": "^1.1.0",
+    "@f/is-function": "^1.1.1",
     "babel-cli": "^6.0.15",
     "babel-preset-es2015": "^6.1.2",
     "standard": "^5.1.0",
-    "tape": "^4.2.0"
+    "tape": "^4.2.0",
+    "test-console": "^1.0.0"
   }
 }

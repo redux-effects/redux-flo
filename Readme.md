@@ -1,22 +1,97 @@
+# redux-flo
 
-# redux-map
+[![Build status][travis-image]][travis-url]
+[![Git tag][git-image]][git-url]
+[![NPM version][npm-image]][npm-url]
+[![Code style][standard-image]][standard-url]
 
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
-
-One async middleware to rule them all - the free functor approach.
+Redux style control flow middleware - inspired by haskel's free monad approach to io and [co](github.com/tj/co).
 
 ## Installation
 
-    $ npm install redux-map
+    $ npm install redux-flo
+
+## Usage
+
+```js
+import {flo, flow} from 'redux-flo'
+import {fetch, fetchMiddleware} from 'redux-effects-fetch'
+import compose from '@f/compose-middleware'
+
+let dispatch = compose([flow(), fetchMiddleware])
+
+// simple parallel
+
+dispatch(flo([
+  fetch('google.com'),
+  fetch('facebook.com')]
+)).then(res => res /* [google, facebook] */)
+
+// or
+
+dispatch(flo({
+  google: fetch('google.com')
+  facebook: fetch('facebook.com')
+})).then(res => res /* {google: google, facebook: facebook} */)
+
+// simple serial
+
+dispatch(flo(function * () {
+  yield fetch('google.com') // google
+  return yield fetch('facebook.com')
+})).then(res => res /* facebook */)
+
+// complex
+dispatch(flo(function * () {
+  //sync
+  yield fetch('google.com') // google
+  yield fetch('facebook.com') // facebook
+  //parallel
+  yield flo([fetch('heroku.com'), fetch('segment.io')]) // [heroku, segment]
+  // parallel
+  yield flo({github: fetch('github.com'), travis: fetch('travis-ci.org')}) // {github: github, travis: travis-ci}
+  return 'done'
+})).then(res => res /* 'done' */)
+```
+
+## API
+
+### flow (errorHandler, successHandler)
+FLO middleWare.
+
+ - `errorHandler` - handles errors in flows (defualts to logging and throwing errors)
+ - `successHandler` - handles successes in flow (defaults to identity function)
+
+**Returns:** redux style middleware
+
+Flo is simple and powerful:
+
+```js
+action.type === FLO
+  ? toPromise(map(dispatch, action.payload)).then(successHandler, errorHandler)
+  : next(action)
+```
+
+`map` can map FLO payloads that are mappable (Arrays, Objects, Generators, and Functors). Arrays, Objects, and Generators have default map functions. If you want to create a custom flow, just add a map method to the FLO payload object.
+
+`toPromise` is similar to the toPromise in [co](github.com/tj/co), but is not recursive. It can take Arrays, Objects, Generators, and Thunks.
+
+### flo(obj)
+FLO action creator
+
+- `obj` - mappable object
+
+**Returns:** FLO action
 
 ## License
 
-The MIT License
+MIT
 
-Copyright &copy; 2015, Weo.io &lt;info@weo.io&gt;
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+[travis-image]: https://img.shields.io/travis/redux-effects/flo.svg?style=flat-square
+[travis-url]: https://travis-ci.org/redux-effects/flo
+[git-image]: https://img.shields.io/github/tag/redux-effects/flo.svg
+[git-url]: https://github.com/redux-effects/flo
+[standard-image]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat
+[standard-url]: https://github.com/feross/standard
+[npm-image]: https://img.shields.io/npm/v/redux-effects/flo.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/redux-effects/flo
