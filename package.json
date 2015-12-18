@@ -7,7 +7,8 @@
   "main": "lib/index.js",
   "scripts": {
     "prepublish": "make build",
-    "postpublish": "make clean"
+    "postpublish": "make clean",
+    "postversion": "git push && git push --tags && npm publish --access=public"
   },
   "dependencies": {
     "@f/identity": "^1.1.1",
