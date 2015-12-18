@@ -16,7 +16,7 @@
     "@f/to-promise": "^1.0.0"
   },
   "devDependencies": {
-    "@f/compose-middleware": "^1.1.0",
+    "@f/compose-middleware": "^1.1.1",
     "@f/is-function": "^1.1.1",
     "babel-cli": "^6.0.15",
     "babel-preset-es2015": "^6.1.2",
