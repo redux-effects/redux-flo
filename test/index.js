@@ -7,12 +7,13 @@ import {flo, flow} from '../src'
 import {stderr} from 'test-console'
 import isFunction from '@f/is-function'
 import compose from '@f/compose-middleware'
+import isGenerator from '@f/is-generator'
+import identity from '@f/identity'
+import map from '@f/map'
 
 /**
  * Tests
  */
-
-console.log('flow', flo, flow)
 
 var log = []
 const doDispatch = (v) => {
@@ -28,6 +29,11 @@ const wrapEach = function(fn) {
     //after
   }
 }
+
+test('is generator', t => {
+  t.equal(isGenerator(map(identity, function * () {})), true)
+  t.end()
+})
 
 test('must return a function to handle next', t => {
   t.plan(2)
@@ -60,7 +66,7 @@ test('must run the given action generator object with dispatch', wrapEach(t => {
 
   const actionHandler = nextHandler();
 
-  actionHandler(flo((function *() {
+  actionHandler(flo((function * () {
     yield 'foo'
     t.deepEqual(log, ['foo'])
   })()))
