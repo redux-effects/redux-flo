@@ -21,12 +21,12 @@ const doDispatch = (v) => {
 }
 const nextHandler = flow()({dispatch: doDispatch})
 
-const wrapEach = function(fn) {
-  return function(t) {
+const wrapEach = (fn) => {
+  return (t) => {
     // before
     log = []
     fn(t)
-    //after
+    // after
   }
 }
 
@@ -52,29 +52,26 @@ test('handle next must return a function to handle action', t => {
 test('must run the given action generator function with dispatch', wrapEach(t => {
   t.plan(1)
 
-  const actionHandler = nextHandler();
+  const actionHandler = nextHandler()
 
   actionHandler(flo(function * () {
     yield 'foo'
     t.deepEqual(log, ['foo'])
   }))
-
 }))
 
 test('must run the given action generator object with dispatch', wrapEach(t => {
   t.plan(1)
 
-  const actionHandler = nextHandler();
+  const actionHandler = nextHandler()
 
   actionHandler(flo((function * () {
     yield 'foo'
     t.deepEqual(log, ['foo'])
   })()))
-
 }))
 
 test('must pass action to next if not flo action', wrapEach(t => {
-
   const actionObj = {type: 'action', payload: 'foo'}
 
   const actionHandler = nextHandler(action => {
@@ -104,7 +101,7 @@ test('must return promise if a generator', wrapEach(t => {
   let promise = actionHandler(flo(function * () {
     return expected
   }))
-  promise.then(function(outcome) {
+  promise.then(outcome => {
     t.equal(outcome, expected)
   })
 }))
@@ -128,13 +125,12 @@ test('must log errors to stderr', t => {
 
   let inspect = stderr.inspect()
 
-  actionHandler(flo(function *() {
+  actionHandler(flo(function * () {
     yield 'foo'
-  })).catch(function(e) {
-    t.deepEqual(inspect.output, ["\n", "  Foo\n", "\n"])
+  })).catch(e => {
+    t.deepEqual(inspect.output, ['\n', '  Foo\n', '\n'])
     inspect.restore()
   })
-
 })
 
 test('must allow custom error handler', t => {
@@ -148,7 +144,6 @@ test('must allow custom error handler', t => {
 
   let handlerCalled = false
   const errorHandler = () => {
-    console.log('error handler')
     handlerCalled = true
   }
 
@@ -157,9 +152,9 @@ test('must allow custom error handler', t => {
 
   let inspect = stderr.inspect()
 
-  actionHandler(flo(function *() {
+  actionHandler(flo(function * () {
     yield 'foo'
-  })).then(function() {
+  })).then(() => {
     t.deepEqual(inspect.output, [])
     t.equal(handlerCalled, true)
     inspect.restore()
@@ -175,9 +170,9 @@ test('must throw error when non error given', t => {
   const nextHandler = flow()({dispatch: dispatch})
   const actionHandler = nextHandler()
 
-  actionHandler(flo(function *() {
+  actionHandler(flo(function * () {
     yield 'foo'
-  })).catch(function(err) {
+  })).catch(err => {
     t.ok(err instanceof TypeError)
     t.equal(err.message, 'Non error thrown: foo')
   })

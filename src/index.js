@@ -15,7 +15,7 @@ const FLO = 'FLO'
  * @return {Function} Redux middleware
  */
 
-function flow(errorHandler=defaultErrorHandler, successHandler=identity) {
+function flow (errorHandler = defaultErrorHandler, successHandler = identity) {
   return ({dispatch}) => next => action =>
     action && action.type === FLO
       ? toPromise(map(dispatch, action.payload)).then(successHandler, errorHandler)
@@ -28,8 +28,8 @@ function flow(errorHandler=defaultErrorHandler, successHandler=identity) {
  */
 
 function defaultErrorHandler (err) {
-  if (! (err instanceof Error)) {
-    throw new TypeError("Non error thrown: " + String(err))
+  if (!(err instanceof Error)) {
+    throw new TypeError('Non error thrown: ' + String(err))
   }
 
   let msg = err.stack || err.toString()
