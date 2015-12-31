@@ -3,7 +3,7 @@
  */
 
 import test from 'tape'
-import {flo, flow} from '../src'
+import flow, {flo} from '../src'
 import {stderr} from 'test-console'
 import isFunction from '@f/is-function'
 import compose from '@f/wrap-redux-ware'

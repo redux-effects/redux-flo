@@ -51,6 +51,5 @@ function flo (obj) {
 
 export default flow
 export {
-  flo,
-  flow
+  flo
 }
