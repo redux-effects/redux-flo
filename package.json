@@ -2,7 +2,7 @@
   "name": "redux-flo",
   "description": "Flow control middleware.",
   "repository": "git://github.com/weo-edu/redux-flo.git",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
