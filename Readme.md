@@ -14,7 +14,7 @@ Redux style control flow middleware - inspired by haskel's free monad approach t
 ## Usage
 
 ```js
-import {flo, flow} from 'redux-flo'
+import flow, {flo} from 'redux-flo'
 import {fetch, fetchMiddleware} from 'redux-effects-fetch'
 import compose from '@f/wrap-redux-ware'
 
