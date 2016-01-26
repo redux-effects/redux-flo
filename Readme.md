@@ -5,7 +5,7 @@
 [![NPM version][npm-image]][npm-url]
 [![Code style][standard-image]][standard-url]
 
-Redux style control flow middleware - inspired by haskel's free monad approach to io and [co](github.com/tj/co).
+Redux style control flow middleware - inspired by haskel's free monad approach to io and [co](//github.com/tj/co).
 
 ## Installation
 
