@@ -74,7 +74,7 @@ action.type === FLO
 
 `map` can map FLO payloads that are mappable (Arrays, Objects, Generators, and Functors). Arrays, Objects, and Generators have default map functions. If you want to create a custom flow, just add a map method to the FLO payload object.
 
-`toPromise` is similar to the toPromise in [co](github.com/tj/co), but is not recursive. It can take Arrays, Objects, Generators, and Thunks.
+`toPromise` is similar to the toPromise in [co](//github.com/tj/co), but is not recursive. It can take Arrays, Objects, Generators, and Thunks.
 
 ### flo(obj)
 FLO action creator
