@@ -90,7 +90,7 @@ MIT
 [travis-image]: https://img.shields.io/travis/redux-effects/redux-flo.svg?style=flat-square
 [travis-url]: https://travis-ci.org/redux-effects/redux-flo
 [git-image]: https://img.shields.io/github/tag/redux-effects/redux-flo.svg
-[git-url]: https://github.com/redux-effects/flo
+[git-url]: https://github.com/redux-effects/redux-flo
 [standard-image]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat
 [standard-url]: https://github.com/feross/standard
 [npm-image]: https://img.shields.io/npm/v/redux-flo.svg?style=flat-square
