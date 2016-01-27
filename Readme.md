@@ -57,17 +57,17 @@ FLO middleWare.
 
 Flo is simple and powerful:
 
-Functors and generators will be mapped and converted to a promise (basically a map-reduce).
+**Functors and generators** will be mapped and converted to a promise (basically a map-reduce).
 ```js
 toPromise(map(dispatch, action)).then(successHandler, errorHandler)
 ```
 
-Promises and thunks are converted to promises.
+**Promises and thunks** are converted to a promise.
 ```js
 toPromise(action).then(successHandler, errorHandler)
 ```
 
-All other types (mostly we are talking about plain objects here) are passed down the middleware stack.
+**All other types** (mostly we are talking about plain objects here) are passed down the middleware stack.
 
 ### Functors
 Functors implement map. An array is a functor. A plain object is not. This is good, because we don't want Flo to handle plain objects. We can however coerce plain objects into functors, letting you define custome behavior for Flo. Here's an example:
