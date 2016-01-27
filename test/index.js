@@ -3,13 +3,15 @@
  */
 
 import test from 'tape'
-import flow, {flo} from '../src'
+import flow from '../src'
 import {stderr} from 'test-console'
 import isFunction from '@f/is-function'
 import compose from '@f/bind-middleware'
 import isGenerator from '@f/is-generator'
 import identity from '@f/identity'
 import map from '@f/map'
+import rlog from 'redux-log'
+import ObjectF from '@f/obj-functor'
 
 /**
  * Tests
@@ -30,11 +32,6 @@ const wrapEach = (fn) => {
   }
 }
 
-test('is generator', t => {
-  t.equal(isGenerator(map(identity, function * () {})), true)
-  t.end()
-})
-
 test('must return a function to handle next', t => {
   t.plan(2)
   t.ok(isFunction(nextHandler))
@@ -54,10 +51,49 @@ test('must run the given action generator function with dispatch', wrapEach(t =>
 
   const actionHandler = nextHandler()
 
-  actionHandler(flo(function * () {
+  actionHandler(function * () {
     yield 'foo'
     t.deepEqual(log, ['foo'])
-  }))
+  })
+}))
+
+test('must run the given action array with dispatch', wrapEach(t => {
+  t.plan(1)
+
+  const actionHandler = nextHandler()
+
+  actionHandler(['foo']).then(function () {
+    t.deepEqual(log, ['foo'])
+  })
+
+}))
+
+test('must run the given nested action array with dispatch', wrapEach(t => {
+  t.plan(1)
+
+  let l = []
+  let dispatch = compose([flow(), rlog(l)])
+
+  dispatch(function * () {
+      yield ['foo', 'bar']
+      yield 'qux'
+  }).then(function () {
+    t.deepEqual(l, ['foo', 'bar', 'qux'])
+  })
+
+}))
+
+test('must run the given nested action functor with dispatch', wrapEach(t => {
+  t.plan(1)
+
+  let l = []
+  let dispatch = compose([flow(), rlog(l)])
+
+  dispatch(ObjectF({foo: 'bar'})).then(function (res) {
+    console.log('res', res)
+    t.deepEqual(l, ['bar'])
+  })
+
 }))
 
 test('must run the given action generator object with dispatch', wrapEach(t => {
@@ -65,13 +101,13 @@ test('must run the given action generator object with dispatch', wrapEach(t => {
 
   const actionHandler = nextHandler()
 
-  actionHandler(flo((function * () {
+  actionHandler((function * () {
     yield 'foo'
     t.deepEqual(log, ['foo'])
-  })()))
+  })())
 }))
 
-test('must pass action to next if not flo action', wrapEach(t => {
+test('must pass action to next if not iterable', wrapEach(t => {
   const actionObj = {type: 'action', payload: 'foo'}
 
   const actionHandler = nextHandler(action => {
@@ -98,9 +134,9 @@ test('must return promise if a generator', wrapEach(t => {
   const expected = 'foo'
   const actionHandler = nextHandler()
 
-  let promise = actionHandler(flo(function * () {
+  let promise = actionHandler(function * () {
     return expected
-  }))
+  })
   promise.then(outcome => {
     t.equal(outcome, expected)
   })
@@ -125,9 +161,9 @@ test('must log errors to stderr', t => {
 
   let inspect = stderr.inspect()
 
-  actionHandler(flo(function * () {
+  actionHandler(function * () {
     yield 'foo'
-  })).catch(e => {
+  }).catch(e => {
     t.deepEqual(inspect.output, ['\n', '  Foo\n', '\n'])
     inspect.restore()
   })
@@ -152,9 +188,9 @@ test('must allow custom error handler', t => {
 
   let inspect = stderr.inspect()
 
-  actionHandler(flo(function * () {
+  actionHandler(function * () {
     yield 'foo'
-  })).then(() => {
+  }).then(() => {
     t.deepEqual(inspect.output, [])
     t.equal(handlerCalled, true)
     inspect.restore()
@@ -170,16 +206,16 @@ test('must throw error when non error given', t => {
   const nextHandler = flow()({dispatch: dispatch})
   const actionHandler = nextHandler()
 
-  actionHandler(flo(function * () {
+  actionHandler(function * () {
     yield 'foo'
-  })).catch(err => {
+  }).catch(err => {
     t.ok(err instanceof TypeError)
     t.equal(err.message, 'Non error thrown: foo')
   })
 })
 
 test('should dispatch nested flos', wrapEach(t => {
-  t.plan(2)
+  t.plan(3)
 
   const dispatch = compose([
     flow(),
@@ -187,13 +223,12 @@ test('should dispatch nested flos', wrapEach(t => {
     ctx => next => action => 'foo'
   ])
 
-  dispatch(flo(function * () {
-    let res = yield flo({
-      google: {type: 'fetch', payload: 'google'},
-      facebook: {type: 'fetch', payload: 'facebook'}
-    })
-    t.deepEqual(res, {google: 200, facebook: 200})
+  dispatch(function * () {
+    let [google, facebook] = yield [{type: 'fetch', payload: 'google'}, {type: 'fetch', payload: 'facebook'}]
+
+    t.deepEqual(google, 200)
+    t.deepEqual(facebook, 200)
     t.deepEqual('foo', yield {type: 'bar'})
     t.end()
-  }))
+  })
 }))

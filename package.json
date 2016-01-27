@@ -12,16 +12,22 @@
   },
   "dependencies": {
     "@f/identity": "^1.1.1",
+    "@f/is-function": "^1.1.1",
+    "@f/is-functor": "^1.0.0",
+    "@f/is-generator": "^1.3.2",
+    "@f/is-iterable": "^1.0.1",
+    "@f/is-iterator": "^1.0.1",
+    "@f/is-promise": "^1.1.1",
     "@f/map": "^1.5.2",
     "@f/to-promise": "^1.1.1"
   },
   "devDependencies": {
     "@f/bind-middleware": "^1.1.1",
-    "@f/is-function": "^1.1.1",
-    "@f/is-generator": "^1.3.2",
-    "@f/wrap-redux-ware": "^1.0.0",
+    "@f/obj-functor": "^1.0.0",
     "babel-cli": "^6.0.15",
     "babel-preset-es2015": "^6.1.2",
+    "redux-log": "^2.0.0",
+    "rlog": "0.0.2",
     "standard": "^5.1.0",
     "tape": "^4.2.0",
     "test-console": "^1.0.0"

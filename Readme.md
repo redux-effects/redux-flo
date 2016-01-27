@@ -14,7 +14,7 @@ Redux style control flow middleware - inspired by haskel's free monad approach t
 ## Usage
 
 ```js
-import flow, {flo} from 'redux-flo'
+import flow from 'redux-flo'
 import fetchMiddleware, {fetch} from 'redux-effects-fetch'
 import bind from '@f/bind-middleware'
 
@@ -22,36 +22,27 @@ let dispatch = bind([flow(), fetchMiddleware])
 
 // simple parallel
 
-dispatch(flo([
+dispatch([
   fetch('google.com'),
-  fetch('facebook.com')]
-)).then(res => res /* [google, facebook] */)
-
-// or
-
-dispatch(flo({
-  google: fetch('google.com')
-  facebook: fetch('facebook.com')
-})).then(res => res /* {google: google, facebook: facebook} */)
+  fetch('facebook.com')
+]).then(res => res /* [google, facebook] */)
 
 // simple serial
 
-dispatch(flo(function * () {
+dispatch(function * () {
   yield fetch('google.com') // google
   return yield fetch('facebook.com')
-})).then(res => res /* facebook */)
+}).then(res => res /* facebook */)
 
 // complex
-dispatch(flo(function * () {
+dispatch(function * () {
   //sync
   yield fetch('google.com') // google
   yield fetch('facebook.com') // facebook
   //parallel
-  yield flo([fetch('heroku.com'), fetch('segment.io')]) // [heroku, segment]
-  // parallel
-  yield flo({github: fetch('github.com'), travis: fetch('travis-ci.org')}) // {github: github, travis: travis-ci}
+  yield [fetch('heroku.com'), fetch('segment.io')] // [heroku, segment]
   return 'done'
-})).then(res => res /* 'done' */)
+}).then(res => res /* 'done' */)
 ```
 
 ## API
@@ -66,22 +57,36 @@ FLO middleWare.
 
 Flo is simple and powerful:
 
+Functors and generators will be mapped and converted to a promise (basically a map-reduce).
 ```js
-action.type === FLO
-  ? toPromise(map(dispatch, action.payload)).then(successHandler, errorHandler)
-  : next(action)
+toPromise(map(dispatch, action)).then(successHandler, errorHandler)
 ```
 
-`map` can map FLO payloads that are mappable (Arrays, Objects, Generators, and Functors). Arrays, Objects, and Generators have default map functions. If you want to create a custom flow, just add a map method to the FLO payload object.
+Promises and thunks are converted to promises.
+```js
+toPromise(action).then(successHandler, errorHandler)
+```
 
-`toPromise` is similar to the toPromise in [co](//github.com/tj/co), but is not recursive. It can take Arrays, Objects, Generators, and Thunks.
+All other types (mostly we are talking about plain objects here) are passed down the middleware stack.
 
-### flo(obj)
-FLO action creator
+### Functors
+Functors implement map. An array is a functor. A plain object is not. This is good, because we don't want Flo to handle plain objects. We can however coerce plain objects into functors, letting you define custome behavior for Flo. Here's an example:
 
-- `obj` - mappable object
+```js
+import flow from 'redux-flo'
+import fetchMiddleware, {fetch} from 'redux-effects-fetch'
+import bind from '@f/bind-middleware'
+import ObjectF from '@f/obj-functor'
 
-**Returns:** FLO action
+let dispatch = bind([flow(), fetchMiddleware])
+
+dispatch(function * () {
+  yield ObjectF({
+    google: fetch('google.com'),
+    facebook: fetch('facebook.com')
+  }) // => {google: google, facebook: facebook}
+})
+```
 
 ## License
 
