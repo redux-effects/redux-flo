@@ -50,7 +50,7 @@ dispatch(function * () {
 ### flow (errorHandler, successHandler)
 FLO middleWare.
 
- - `errorHandler` - handles errors in flows (defualts to logging and throwing errors)
+ - `errorHandler` - handles errors in flows (defualts to throws)
  - `successHandler` - handles successes in flow (defaults to identity function)
 
 **Returns:** redux style middleware
