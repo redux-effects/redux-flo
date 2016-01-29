@@ -19,6 +19,7 @@
     "@f/is-iterator": "^1.0.1",
     "@f/is-promise": "^1.1.1",
     "@f/map": "^1.5.2",
+    "@f/throws": "^1.0.0",
     "@f/to-promise": "^1.1.1"
   },
   "devDependencies": {

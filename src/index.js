@@ -10,6 +10,7 @@ import isGenerator from '@f/is-generator'
 import isPromise from '@f/is-promise'
 import isFunctor from '@f/is-functor'
 import isFunction from '@f/is-function'
+import throws from '@f/throws'
 
 const FLO = 'FLO'
 
@@ -20,7 +21,7 @@ const FLO = 'FLO'
  * @return {Function} Redux middleware
  */
 
-function flow (errorHandler = defaultErrorHandler, successHandler = identity) {
+function flow (errorHandler = throws, successHandler = identity) {
   return ({dispatch}) => next => action => {
     let promise
     if (isFunctor(action) || isGenerator(action) || isIterator(action)) {
@@ -32,23 +33,6 @@ function flow (errorHandler = defaultErrorHandler, successHandler = identity) {
     }
     return promise.then(successHandler, errorHandler)
   }
-}
-
-/**
- * Logs errors and then throws
- * @param  {Error} err
- */
-
-function defaultErrorHandler (err) {
-  if (!(err instanceof Error)) {
-    throw new TypeError('Non error thrown: ' + String(err))
-  }
-
-  let msg = err.stack || err.toString()
-  console.error()
-  console.error(msg.replace(/^/gm, '  '))
-  console.error()
-  throw err
 }
 
 export default flow

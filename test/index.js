@@ -148,27 +148,6 @@ test('must throw error if argument is non-object', wrapEach(t => {
   t.throws(() => flow()())
 }))
 
-test('must log errors to stderr', t => {
-  t.plan(1)
-
-  const dispatch = () => {
-    var err = new Error()
-    err.stack = 'Foo'
-    throw err
-  }
-  const nextHandler = flow()({dispatch: dispatch})
-  const actionHandler = nextHandler()
-
-  let inspect = stderr.inspect()
-
-  actionHandler(function * () {
-    yield 'foo'
-  }).catch(e => {
-    t.deepEqual(inspect.output, ['\n', '  Foo\n', '\n'])
-    inspect.restore()
-  })
-})
-
 test('must allow custom error handler', t => {
   t.plan(2)
 
@@ -194,23 +173,6 @@ test('must allow custom error handler', t => {
     t.deepEqual(inspect.output, [])
     t.equal(handlerCalled, true)
     inspect.restore()
-  })
-})
-
-test('must throw error when non error given', t => {
-  t.plan(2)
-
-  const dispatch = () => {
-    throw 'foo'
-  }
-  const nextHandler = flow()({dispatch: dispatch})
-  const actionHandler = nextHandler()
-
-  actionHandler(function * () {
-    yield 'foo'
-  }).catch(err => {
-    t.ok(err instanceof TypeError)
-    t.equal(err.message, 'Non error thrown: foo')
   })
 })
 
