@@ -25,7 +25,7 @@ function flow (errorHandler = throws, successHandler = identity) {
   return ({dispatch}) => next => action => {
     let promise
     if (isFunctor(action) || isGenerator(action) || isIterator(action)) {
-      promise = toPromise(map(dispatch, action))
+      promise = toPromise(map(action => action && dispatch(action), action))
     } else if (isPromise(action) || isFunction(action)) {
       promise = toPromise(action)
     } else {
