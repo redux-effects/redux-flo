@@ -1,5 +1,5 @@
 /**
- * Import
+ * Imports
  */
 
 import toPromise from '@f/to-promise'
@@ -12,8 +12,6 @@ import isFunctor from '@f/is-functor'
 import isFunction from '@f/is-function'
 import logError from '@f/log-error'
 
-const FLO = 'FLO'
-
 /**
  * Flo middleWare
  * @param  {Function} errorHandler=defaultErrorHandler
@@ -21,7 +19,7 @@ const FLO = 'FLO'
  * @return {Function} Redux middleware
  */
 
-function flow (errorHandler = logError, successHandler = identity) {
+function flow (errorHandler = defaultErrorHandler, successHandler = identity) {
   return ({dispatch}) => next => action => {
     let promise
     if (isFunctor(action) || isGenerator(action) || isIterator(action)) {
@@ -34,5 +32,21 @@ function flow (errorHandler = logError, successHandler = identity) {
     return promise.then(successHandler, errorHandler)
   }
 }
+
+/**
+ * Default error handler
+ *
+ * Logs the error and then throws it again to pass it back
+ * to the calling code
+ */
+
+function defaultErrorHandler (err) {
+  logError(err)
+  throw err
+}
+
+/**
+ * Exports
+ */
 
 export default flow
