@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@f/identity": "^1.1.1",
-    "@f/is-function": "^1.1.1",
     "@f/is-functor": "^1.0.0",
     "@f/is-generator": "^1.3.2",
     "@f/is-iterable": "^1.0.1",

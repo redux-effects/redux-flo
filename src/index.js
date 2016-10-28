@@ -9,7 +9,6 @@ import isIterator from '@f/is-iterator'
 import isGenerator from '@f/is-generator'
 import isPromise from '@f/is-promise'
 import isFunctor from '@f/is-functor'
-import isFunction from '@f/is-function'
 import logError from '@f/log-error'
 
 /**
@@ -24,7 +23,7 @@ function flow (errorHandler = defaultErrorHandler, successHandler = identity) {
     let promise
     if (isFunctor(action) || isGenerator(action) || isIterator(action)) {
       promise = toPromise(map(action => action && dispatch(action), action))
-    } else if (isPromise(action) || isFunction(action)) {
+    } else if (isPromise(action)) {
       promise = toPromise(action)
     } else {
       return next(action)
